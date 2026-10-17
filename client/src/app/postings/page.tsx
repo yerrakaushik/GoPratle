@@ -7,17 +7,10 @@ import { RequirementModal } from '../../components/postings/RequirementModal';
 import { api } from '../../services/api';
 import { RequirementDocument } from '../../types/requirement';
 import {
-  Sparkles,
-  Music,
-  Users,
   Search,
-  Calendar,
-  MapPin,
-  Building,
   PlusCircle,
   Loader2,
   RefreshCw,
-  Database,
   ArrowRight,
   Filter,
 } from 'lucide-react';
@@ -69,133 +62,95 @@ export default function PostingsPage() {
     return () => clearTimeout(timer);
   }, [fetchData]);
 
-  const getCategoryBadge = (category: string) => {
-    switch (category) {
-      case 'planner':
-        return {
-          title: 'Event Planner',
-          icon: Sparkles,
-          color: 'bg-violet-950/80 text-violet-300 border-violet-800',
-        };
-      case 'performer':
-        return {
-          title: 'Performer',
-          icon: Music,
-          color: 'bg-rose-950/80 text-rose-300 border-rose-800',
-        };
-      case 'crew':
-        return {
-          title: 'Crew',
-          icon: Users,
-          color: 'bg-cyan-950/80 text-cyan-300 border-cyan-800',
-        };
-      default:
-        return {
-          title: category,
-          icon: Database,
-          color: 'bg-neutral-800 text-neutral-300 border-neutral-700',
-        };
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
+      <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full space-y-6">
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-neutral-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
-              <span>Event Requirements Feed</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-indigo-300">
-                Live MongoDB Store
-              </span>
+            <div className="inline-block text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-1">
+              Live Database Feed
+            </div>
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+              Event Requirements Directory
             </h1>
-            <p className="text-sm text-neutral-400 mt-1">
-              Explore posted requirements categorized by Planner, Performer, and Technical Crew.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Browse submitted requirements categorized by Planners, Performers, and Crew.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={fetchData}
               disabled={isLoading}
-              className="p-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white active:scale-[0.96] transition-all"
               title="Refresh Postings"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
 
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 font-medium text-xs shadow-sm active:scale-[0.96] transition-all"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>Post New Requirement</span>
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Post Requirement</span>
             </Link>
           </div>
         </div>
 
-        {/* Stats Metrics Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-neutral-900/40 border border-neutral-800">
-            <span className="text-xs text-neutral-400 font-medium block">Total Postings</span>
-            <span className="text-2xl font-bold text-white mt-1 block">
+        {/* Aggregate Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
+            <span className="text-[11px] font-mono uppercase text-zinc-500 block">Total Requirements</span>
+            <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
               {stats.total}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-violet-950/20 border border-violet-900/40">
-            <span className="text-xs text-violet-400 font-medium block flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              Planners
-            </span>
-            <span className="text-2xl font-bold text-white mt-1 block">
+          <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
+            <span className="text-[11px] font-mono uppercase text-zinc-500 block">Planners</span>
+            <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
               {stats.categories.planner}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-rose-950/20 border border-rose-900/40">
-            <span className="text-xs text-rose-400 font-medium block flex items-center gap-1.5">
-              <Music className="w-3.5 h-3.5" />
-              Performers
-            </span>
-            <span className="text-2xl font-bold text-white mt-1 block">
+          <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
+            <span className="text-[11px] font-mono uppercase text-zinc-500 block">Performers</span>
+            <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
               {stats.categories.performer}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-cyan-950/20 border border-cyan-900/40">
-            <span className="text-xs text-cyan-400 font-medium block flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5" />
-              Crew
-            </span>
-            <span className="text-2xl font-bold text-white mt-1 block">
+          <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
+            <span className="text-[11px] font-mono uppercase text-zinc-500 block">Crew</span>
+            <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
               {stats.categories.crew}
             </span>
           </div>
         </div>
 
-        {/* Search & Category Filter Controls */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        {/* Filter Controls & Search */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
           {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             {[
-              { id: 'all', label: 'All Postings' },
-              { id: 'planner', label: 'Event Planners' },
-              { id: 'performer', label: 'Performers & Artists' },
-              { id: 'crew', label: 'Technical Crew' },
+              { id: 'all', label: 'All' },
+              { id: 'planner', label: 'Planners' },
+              { id: 'performer', label: 'Performers' },
+              { id: 'crew', label: 'Crew' },
             ].map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveCategory(tab.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
                   activeCategory === tab.id
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'bg-neutral-900/80 text-neutral-400 hover:text-white hover:bg-neutral-800 border border-neutral-800'
+                    ? 'bg-zinc-100 text-zinc-950 shadow-sm'
+                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
                 }`}
               >
                 {tab.label}
@@ -204,143 +159,114 @@ export default function PostingsPage() {
           </div>
 
           {/* Search Box */}
-          <div className="relative w-full sm:w-72">
+          <div className="relative w-full sm:w-64">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search event, city, venue..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              placeholder="Search event, location..."
+              className="w-full pl-8 pr-3.5 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs placeholder-zinc-500 focus:outline-none focus:border-zinc-400"
             />
-            <Search className="w-4 h-4 text-neutral-500 absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-2" />
           </div>
         </div>
 
         {/* Requirements Grid */}
         {isLoading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-neutral-400">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-            <p className="text-sm">Fetching requirements from MongoDB...</p>
+          <div className="py-20 flex flex-col items-center justify-center gap-2 text-zinc-500 font-mono text-xs">
+            <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+            <span>Loading MongoDB feed...</span>
           </div>
         ) : requirements.length === 0 ? (
-          <div className="py-16 text-center rounded-3xl bg-neutral-900/30 border border-neutral-800/80 space-y-4 max-w-md mx-auto">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-800 flex items-center justify-center mx-auto text-neutral-400">
-              <Filter className="w-6 h-6" />
+          <div className="py-16 text-center rounded-2xl bg-zinc-950/40 border border-zinc-800 space-y-3 max-w-sm mx-auto">
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center mx-auto text-zinc-500">
+              <Filter className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">No requirements found</h3>
-              <p className="text-xs text-neutral-400 mt-1 max-w-xs mx-auto">
+              <h3 className="text-sm font-semibold text-white">No postings found</h3>
+              <p className="text-xs text-zinc-500 mt-0.5">
                 {searchTerm || activeCategory !== 'all'
-                  ? 'Try broadening your search or switching category filters.'
-                  : 'Be the first to post an event requirement to the database!'}
+                  ? 'Try adjusting your search query or filters.'
+                  : 'No event requirements posted yet.'}
               </p>
             </div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-zinc-950 text-xs font-medium active:scale-[0.96] transition-all"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-3.5 h-3.5" />
               <span>Post a Requirement</span>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {requirements.map((req) => {
-              const badge = getCategoryBadge(req.category);
-              const BadgeIcon = badge.icon;
-
               return (
                 <div
                   key={req._id}
                   onClick={() => setSelectedDoc(req)}
-                  className="p-5 rounded-2xl bg-neutral-900/40 border border-neutral-800/80 hover:border-neutral-700 hover:bg-neutral-900/80 cursor-pointer transition-all flex flex-col justify-between group shadow-lg hover:shadow-indigo-500/5"
+                  className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60 cursor-pointer active:scale-[0.99] transition-all flex flex-col justify-between group"
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     {/* Category pill & date */}
                     <div className="flex items-center justify-between">
-                      <span
-                        className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 ${badge.color}`}
-                      >
-                        <BadgeIcon className="w-3 h-3" />
-                        <span>{badge.title}</span>
+                      <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">
+                        {req.category}
                       </span>
 
-                      <span className="text-[11px] text-neutral-500">
+                      <span className="text-[11px] font-mono text-zinc-500 tabular-nums">
                         {new Date(req.createdAt).toLocaleDateString()}
                       </span>
                     </div>
 
                     {/* Title */}
                     <div>
-                      <h3 className="font-bold text-base text-white group-hover:text-indigo-400 transition-colors line-clamp-1">
+                      <h3 className="font-semibold text-sm text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
                         {req.eventName}
                       </h3>
-                      <span className="text-xs text-neutral-400 font-medium">
+                      <span className="text-xs text-zinc-400">
                         {req.eventType}
                       </span>
                     </div>
 
                     {/* Meta info */}
-                    <div className="space-y-1.5 text-xs text-neutral-400 pt-2 border-t border-neutral-800/60">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                        <span className="truncate">
-                          {req.isDateRange
-                            ? `${new Date(req.startDate).toLocaleDateString()} - ${new Date(
-                                req.endDate
-                              ).toLocaleDateString()}`
-                            : new Date(req.startDate).toLocaleDateString()}
-                        </span>
+                    <div className="space-y-1 text-xs text-zinc-400 pt-2 border-t border-zinc-800/60 font-mono text-[11px]">
+                      <div>{req.location}{req.venue ? ` • ${req.venue}` : ''}</div>
+                      <div className="tabular-nums text-zinc-500">
+                        {req.isDateRange
+                          ? `${new Date(req.startDate).toLocaleDateString()} → ${new Date(
+                              req.endDate
+                            ).toLocaleDateString()}`
+                          : new Date(req.startDate).toLocaleDateString()}
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                        <span className="truncate">{req.location}</span>
-                      </div>
-
-                      {req.venue && (
-                        <div className="flex items-center gap-2">
-                          <Building className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-                          <span className="truncate">{req.venue}</span>
-                        </div>
-                      )}
                     </div>
 
-                    {/* Category Highlights */}
-                    <div className="pt-2">
+                    {/* Highlight spec */}
+                    <div className="pt-1 text-xs">
                       {req.category === 'planner' && req.plannerDetails && (
-                        <div className="flex items-center justify-between text-xs bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/60">
-                          <span className="text-neutral-400">Budget:</span>
-                          <span className="text-emerald-400 font-medium">
-                            {req.plannerDetails.overallBudget}
-                          </span>
+                        <div className="text-zinc-400 font-mono text-[11px]">
+                          Budget: <span className="text-white">{req.plannerDetails.overallBudget}</span>
                         </div>
                       )}
 
                       {req.category === 'performer' && req.performerDetails && (
-                        <div className="flex items-center justify-between text-xs bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/60">
-                          <span className="text-neutral-400">Act:</span>
-                          <span className="text-rose-400 font-medium capitalize">
-                            {req.performerDetails.performerType.replace(/_/g, ' ')}
-                          </span>
+                        <div className="text-zinc-400 font-mono text-[11px]">
+                          Act: <span className="text-white capitalize">{req.performerDetails.performerType.replace(/_/g, ' ')}</span>
                         </div>
                       )}
 
                       {req.category === 'crew' && req.crewDetails && (
-                        <div className="flex items-center justify-between text-xs bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/60">
-                          <span className="text-neutral-400">Headcount:</span>
-                          <span className="text-cyan-400 font-medium">
-                            {req.crewDetails.headcount} Members
-                          </span>
+                        <div className="text-zinc-400 font-mono text-[11px]">
+                          Headcount: <span className="text-white tabular-nums">{req.crewDetails.headcount} Members</span>
                         </div>
                       )}
                     </div>
                   </div>
 
                   {/* Card Footer */}
-                  <div className="mt-4 pt-3 border-t border-neutral-800 flex items-center justify-between text-xs text-indigo-400 font-medium group-hover:text-indigo-300">
+                  <div className="mt-3 pt-2.5 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400 group-hover:text-white font-medium">
                     <span>View Specifications</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               );

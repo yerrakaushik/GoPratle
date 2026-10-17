@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, Calendar, Layers, Server, Database } from 'lucide-react';
 import { api } from '../services/api';
 
 export const Navbar: React.FC = () => {
@@ -14,7 +13,7 @@ export const Navbar: React.FC = () => {
     isMemory: boolean;
   }>({
     online: false,
-    dbState: 'checking...',
+    dbState: 'connecting',
     isMemory: false,
   });
 
@@ -50,67 +49,62 @@ export const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-neutral-950/80 border-b border-neutral-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-zinc-950/90 border-b border-zinc-800/80">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-white" />
+          {/* Minimalist Architectural Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-3 group active:scale-[0.98] transition-transform duration-100"
+          >
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 font-mono font-bold text-sm flex items-center justify-center shadow-sm">
+              GP
             </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">
+            <div className="flex items-baseline gap-2">
+              <span className="text-base font-semibold tracking-tight text-white group-hover:text-zinc-200 transition-colors">
                 GoPratle
               </span>
-              <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-indigo-300">
-                Event Engine
+              <span className="text-[11px] font-mono tracking-wider text-zinc-500 uppercase">
+                Requirements
               </span>
             </div>
           </Link>
 
-          {/* Navigation items */}
-          <nav className="flex items-center gap-1 sm:gap-3">
+          {/* Minimalist Navigation */}
+          <nav className="flex items-center gap-2">
             <Link
               href="/"
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all duration-150 ${
                 pathname === '/'
-                  ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                  : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
+                  ? 'bg-zinc-800 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
               }`}
             >
-              <Calendar className="w-4 h-4" />
-              <span>Post Requirement</span>
+              Post Requirement
             </Link>
 
             <Link
               href="/postings"
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all duration-150 ${
                 pathname === '/postings'
-                  ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                  : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
+                  ? 'bg-zinc-800 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
               }`}
             >
-              <Layers className="w-4 h-4" />
-              <span>Browse Postings</span>
+              Browse Postings
             </Link>
 
-            {/* Health pill */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900 border border-neutral-800 text-xs">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  healthStatus.online
-                    ? 'bg-emerald-500 shadow-[0_0_8px_#10B981]'
-                    : 'bg-rose-500 animate-pulse'
+            {/* Precision status indicator (No slop, clean tabular numbers) */}
+            <div className="hidden sm:flex items-center gap-2 ml-2 pl-3 border-l border-zinc-800 text-[11px] font-mono text-zinc-400">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  healthStatus.online ? 'bg-emerald-400' : 'bg-zinc-600'
                 }`}
               />
-              <span className="text-neutral-400 flex items-center gap-1">
-                <Server className="w-3 h-3 text-neutral-500" />
-                {healthStatus.online ? 'API Online' : 'Connecting API...'}
-              </span>
-              <span className="text-neutral-600">•</span>
-              <span className="text-neutral-400 flex items-center gap-1">
-                <Database className="w-3 h-3 text-neutral-500" />
-                {healthStatus.isMemory ? 'MongoDB (In-Memory Dev)' : 'MongoDB Connected'}
+              <span>{healthStatus.online ? 'API Online' : 'Connecting...'}</span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-zinc-500">
+                {healthStatus.isMemory ? 'Dev Memory DB' : 'MongoDB'}
               </span>
             </div>
           </nav>

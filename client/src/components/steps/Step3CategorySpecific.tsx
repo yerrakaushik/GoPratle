@@ -2,18 +2,7 @@
 
 import React from 'react';
 import { useRequirementForm } from '../../context/FormContext';
-import {
-  Sparkles,
-  Music,
-  Users,
-  Volume2,
-  DollarSign,
-  ArrowLeft,
-  ArrowRight,
-  ShieldCheck,
-  Coffee,
-  Truck,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import {
   CrewExperienceLevel,
   DressCodeType,
@@ -34,7 +23,7 @@ export const Step3CategorySpecific: React.FC = () => {
   // 1. PLANNER STEP 3
   const renderPlannerStep3 = () => {
     const servicesList = [
-      'Venue Sourcing & Contract Negotiation',
+      'Venue Sourcing & Negotiation',
       'Catering & Beverage Curation',
       'Decor & Floral Design',
       'Audio/Visual & Stage Production',
@@ -56,30 +45,26 @@ export const Step3CategorySpecific: React.FC = () => {
     return (
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-neutral-200 mb-2">
-            Specific Services & Deliverables Needed <span className="text-rose-400">*</span>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2">
+            Specific Services & Deliverables <span className="text-rose-400">*</span>
           </label>
-          <p className="text-xs text-neutral-400 mb-3">
-            Check all the specific services you require the event planner or agency to handle.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
             {servicesList.map((service) => {
               const isChecked = formData.plannerDetails.servicesNeeded?.includes(service);
               return (
                 <label
                   key={service}
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer active:scale-[0.98] transition-all duration-150 ${
                     isChecked
-                      ? 'border-violet-500 bg-violet-950/20 text-white ring-1 ring-violet-500/30'
-                      : 'border-neutral-800 bg-neutral-900/60 hover:border-neutral-700 text-neutral-400'
+                      ? 'border-white bg-zinc-900 text-white'
+                      : 'border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/40 text-zinc-400'
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={isChecked}
                     onChange={() => toggleService(service)}
-                    className="w-4 h-4 rounded text-violet-600 bg-neutral-800 border-neutral-700 focus:ring-violet-500 focus:ring-offset-neutral-900"
+                    className="w-3.5 h-3.5 rounded bg-zinc-900 border-zinc-700 text-white focus:ring-0"
                   />
                   <span className="text-xs font-medium leading-tight">{service}</span>
                 </label>
@@ -95,7 +80,7 @@ export const Step3CategorySpecific: React.FC = () => {
 
         {/* Decor Preferences */}
         <div>
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Decor & Aesthetic Preferences
           </label>
           <textarea
@@ -103,13 +88,13 @@ export const Step3CategorySpecific: React.FC = () => {
             value={formData.plannerDetails.decorPreferences}
             onChange={(e) => updatePlannerDetails('decorPreferences', e.target.value)}
             placeholder="e.g. Color palette: Pastel blushes, ivory florals, gold accents, LED wall backdrop."
-            className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
           />
         </div>
 
         {/* Additional Notes */}
         <div>
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Special Client Requests & Additional Notes
           </label>
           <textarea
@@ -117,7 +102,7 @@ export const Step3CategorySpecific: React.FC = () => {
             value={formData.plannerDetails.additionalNotes}
             onChange={(e) => updatePlannerDetails('additionalNotes', e.target.value)}
             placeholder="Provide any additional context, VIP guidelines, cultural traditions, or milestone schedule."
-            className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
           />
         </div>
       </div>
@@ -130,31 +115,30 @@ export const Step3CategorySpecific: React.FC = () => {
       {
         id: 'organizer_provides_full_pa',
         title: 'Full PA & Backline Provided',
-        desc: 'Organizer arranges all stage monitors, mics, drum kit & amplifiers.',
+        desc: 'Organizer arranges all monitors, microphones, backline kit, and amplifiers.',
       },
       {
         id: 'performer_must_bring_gear',
         title: 'Performer Brings Own Gear',
-        desc: 'Performer must bring all instruments, mixer, and stage gear.',
+        desc: 'Performer must bring all personal instruments, sub-mixer, and stage gear.',
       },
       {
         id: 'venue_inhouse_basic',
         title: 'In-House Venue Basic PA',
-        desc: 'Venue has a standard PA; performer brings personal instruments.',
+        desc: 'Venue has standard speakers; performer brings personal performance gear.',
       },
       {
         id: 'needs_discussion',
-        title: 'Subject to Discussion',
-        desc: 'Technical rider will be aligned upon contracting.',
+        title: 'Subject to Technical Discussion',
+        desc: 'Technical stage rider will be finalized directly upon engagement.',
       },
     ];
 
     return (
       <div className="space-y-6">
-        {/* Sound & PA Provision */}
         <div>
-          <label className="block text-sm font-semibold text-neutral-200 mb-2">
-            Sound & PA Equipment Provision <span className="text-rose-400">*</span>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2">
+            Sound & PA Provision <span className="text-rose-400">*</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {soundOptions.map((opt) => {
@@ -166,42 +150,49 @@ export const Step3CategorySpecific: React.FC = () => {
                   onClick={() =>
                     updatePerformerDetails('soundEquipmentProvided', opt.id)
                   }
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl border cursor-pointer active:scale-[0.98] transition-all duration-150 ${
                     isSelected
-                      ? 'border-rose-500 bg-rose-950/20 text-white ring-2 ring-rose-500/20'
-                      : 'border-neutral-800 bg-neutral-900/60 hover:border-neutral-700 text-neutral-400'
+                      ? 'border-white bg-zinc-900 text-white shadow-sm ring-1 ring-white/20'
+                      : 'border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/40 text-zinc-400'
                   }`}
                 >
-                  <div className="font-semibold text-sm text-white mb-1">{opt.title}</div>
-                  <p className="text-xs text-neutral-400">{opt.desc}</p>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-xs text-white">{opt.title}</span>
+                    {isSelected && (
+                      <span className="w-3.5 h-3.5 rounded-full bg-white text-zinc-950 flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{opt.desc}</p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {/* Soundcheck Required & Time */}
-          <div className="p-4 rounded-xl bg-neutral-900/60 border border-neutral-800 space-y-3">
+          <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-neutral-200">
+              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
                 Pre-show Soundcheck
               </span>
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-neutral-300">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-300">
                 <input
                   type="checkbox"
                   checked={formData.performerDetails.soundcheckRequired}
                   onChange={(e) =>
                     updatePerformerDetails('soundcheckRequired', e.target.checked)
                   }
-                  className="w-4 h-4 rounded text-rose-600 bg-neutral-800 border-neutral-700"
+                  className="w-3.5 h-3.5 rounded bg-zinc-900 border-zinc-700 text-white focus:ring-0"
                 />
                 Required
               </label>
             </div>
             {formData.performerDetails.soundcheckRequired && (
               <div>
-                <label className="block text-xs text-neutral-400 mb-1">
+                <label className="block text-xs text-zinc-400 mb-1 font-mono">
                   Soundcheck Call Time
                 </label>
                 <input
@@ -210,8 +201,8 @@ export const Step3CategorySpecific: React.FC = () => {
                   onChange={(e) =>
                     updatePerformerDetails('soundcheckTime', e.target.value)
                   }
-                  placeholder="e.g. 04:00 PM (2 hrs prior to show)"
-                  className="w-full px-3.5 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-white text-xs"
+                  placeholder="e.g. 04:00 PM (2 hrs prior to set)"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:outline-none focus:border-zinc-400"
                 />
               </div>
             )}
@@ -219,36 +210,36 @@ export const Step3CategorySpecific: React.FC = () => {
 
           {/* Performance Budget */}
           <div>
-            <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
               Artist Fee / Budget Allocation <span className="text-rose-400">*</span>
             </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={formData.performerDetails.performanceFeeBudget}
-                onChange={(e) =>
-                  updatePerformerDetails('performanceFeeBudget', e.target.value)
-                }
-                placeholder="e.g. ₹1,50,000 / $2,000 + hospitality"
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-900 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/50 ${
-                  errors['performerDetails.performanceFeeBudget']
-                    ? 'border-rose-500'
-                    : 'border-neutral-800'
-                }`}
-              />
-              <DollarSign className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3" />
-            </div>
+            <input
+              type="text"
+              value={formData.performerDetails.performanceFeeBudget}
+              onChange={(e) =>
+                updatePerformerDetails('performanceFeeBudget', e.target.value)
+              }
+              placeholder="e.g. ₹1,50,000 / $2,000"
+              className={`w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border text-white text-sm focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 ${
+                errors['performerDetails.performanceFeeBudget']
+                  ? 'border-rose-500'
+                  : 'border-zinc-800'
+              }`}
+            />
             {errors['performerDetails.performanceFeeBudget'] && (
               <p className="text-xs text-rose-400 mt-1">
                 {errors['performerDetails.performanceFeeBudget']}
               </p>
             )}
+            <p className="text-[11px] text-zinc-500 mt-1">
+              Specify artist compensation.
+            </p>
           </div>
 
           {/* Repertoire / Setlist Constraints */}
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-neutral-200 mb-1.5">
-              Repertoire Notes, Song Requests & Restrictions
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
+              Repertoire Notes, Song Requests & Set Restrictions
             </label>
             <textarea
               rows={3}
@@ -256,8 +247,8 @@ export const Step3CategorySpecific: React.FC = () => {
               onChange={(e) =>
                 updatePerformerDetails('repertoireNotes', e.target.value)
               }
-              placeholder="e.g. Must include couple entry song; strict family-friendly clean lyrics; high crowd participation requested."
-              className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/50"
+              placeholder="e.g. Clean family-friendly lyrics only; include popular covers in finale."
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
         </div>
@@ -271,17 +262,17 @@ export const Step3CategorySpecific: React.FC = () => {
       {
         id: 'entry_level',
         label: 'Entry Level',
-        desc: 'Assisted crew, stagehands, runners under senior supervision.',
+        desc: 'Assisted stagehands and runners under supervision.',
       },
       {
         id: 'intermediate',
-        label: 'Mid-Level / Experienced',
-        desc: 'Independent operators on standard audio/lighting/video rigs.',
+        label: 'Experienced Operator',
+        desc: 'Independent operators on standard audio/video consoles.',
       },
       {
         id: 'expert_certified',
         label: 'Certified Lead Engineer',
-        desc: 'Specialized systems engineers with brand/industry certifications.',
+        desc: 'Systems engineers with official brand/rigging certifications.',
       },
     ];
 
@@ -297,8 +288,8 @@ export const Step3CategorySpecific: React.FC = () => {
       <div className="space-y-6">
         {/* Experience Level */}
         <div>
-          <label className="block text-sm font-semibold text-neutral-200 mb-2">
-            Experience Level Desired <span className="text-rose-400">*</span>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2">
+            Experience Level <span className="text-rose-400">*</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {expLevels.map((lvl) => {
@@ -307,24 +298,24 @@ export const Step3CategorySpecific: React.FC = () => {
                 <div
                   key={lvl.id}
                   onClick={() => updateCrewDetails('experienceLevel', lvl.id)}
-                  className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-3.5 rounded-xl border cursor-pointer active:scale-[0.98] transition-all duration-150 ${
                     isSelected
-                      ? 'border-cyan-500 bg-cyan-950/20 text-white ring-2 ring-cyan-500/20'
-                      : 'border-neutral-800 bg-neutral-900/60 hover:border-neutral-700 text-neutral-400'
+                      ? 'border-white bg-zinc-900 text-white shadow-sm ring-1 ring-white/20'
+                      : 'border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/40 text-zinc-400'
                   }`}
                 >
                   <div className="font-semibold text-xs text-white mb-0.5">{lvl.label}</div>
-                  <p className="text-[11px] text-neutral-400 leading-snug">{lvl.desc}</p>
+                  <p className="text-[11px] text-zinc-400 leading-snug">{lvl.desc}</p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Certifications / Gear Knowledge */}
+        {/* Certifications / Equipment Expertise */}
         <div>
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
-            Technical Certifications or Console Expertise Needed
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
+            Console Experience or Safety Certifications
           </label>
           <input
             type="text"
@@ -332,90 +323,85 @@ export const Step3CategorySpecific: React.FC = () => {
             onChange={(e) =>
               updateCrewDetails('certificationsRequired', e.target.value)
             }
-            placeholder="e.g. Dante audio, grandMA3 lighting, Sony FX6 / Blackmagic operation"
-            className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+            placeholder="e.g. Yamaha CL/QL console, grandMA3, working-at-height certification"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
           />
         </div>
 
-        {/* Provisions & Compensation */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Provisions (Meals & Transport) */}
-          <div className="p-4 rounded-xl bg-neutral-900/60 border border-neutral-800 space-y-3">
-            <span className="text-sm font-semibold text-neutral-200 block">
-              Provisions Provided by Organizer
+        {/* Provisions & Pay */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {/* Provisions */}
+          <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 space-y-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300 block">
+              On-Site Provisions
             </span>
             <div className="flex flex-col gap-2 pt-1">
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs text-neutral-300">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs text-zinc-300">
                 <input
                   type="checkbox"
                   checked={formData.crewDetails.mealsProvided}
                   onChange={(e) => updateCrewDetails('mealsProvided', e.target.checked)}
-                  className="w-4 h-4 rounded text-cyan-600 bg-neutral-800 border-neutral-700"
+                  className="w-3.5 h-3.5 rounded bg-zinc-900 border-zinc-700 text-white focus:ring-0"
                 />
-                <Coffee className="w-3.5 h-3.5 text-cyan-400" />
                 <span>On-site Meals & Refreshments Provided</span>
               </label>
 
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs text-neutral-300">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs text-zinc-300">
                 <input
                   type="checkbox"
                   checked={formData.crewDetails.transportProvided}
                   onChange={(e) =>
                     updateCrewDetails('transportProvided', e.target.checked)
                   }
-                  className="w-4 h-4 rounded text-cyan-600 bg-neutral-800 border-neutral-700"
+                  className="w-3.5 h-3.5 rounded bg-zinc-900 border-zinc-700 text-white focus:ring-0"
                 />
-                <Truck className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Local Transport / Cab Reimbursement Provided</span>
               </label>
             </div>
           </div>
 
-          {/* Pay Rate */}
+          {/* Compensation */}
           <div>
-            <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
               Crew Pay Rate / Budget <span className="text-rose-400">*</span>
             </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={formData.crewDetails.compensationRate}
-                onChange={(e) => updateCrewDetails('compensationRate', e.target.value)}
-                placeholder="e.g. ₹3,500 / person per day or ₹500/hr"
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-900 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 ${
-                  errors['crewDetails.compensationRate']
-                    ? 'border-rose-500'
-                    : 'border-neutral-800'
-                }`}
-              />
-              <DollarSign className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3" />
-            </div>
+            <input
+              type="text"
+              value={formData.crewDetails.compensationRate}
+              onChange={(e) => updateCrewDetails('compensationRate', e.target.value)}
+              placeholder="e.g. ₹3,500 / person per day or ₹500/hr"
+              className={`w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border text-white text-sm focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 ${
+                errors['crewDetails.compensationRate']
+                  ? 'border-rose-500'
+                  : 'border-zinc-800'
+              }`}
+            />
             {errors['crewDetails.compensationRate'] && (
               <p className="text-xs text-rose-400 mt-1">
                 {errors['crewDetails.compensationRate']}
               </p>
             )}
-            <p className="text-[11px] text-neutral-500 mt-1">
+            <p className="text-[11px] text-zinc-500 mt-1">
               Specify hourly, daily, or flat shift compensation.
             </p>
           </div>
 
           {/* Dress Code */}
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
               Production Dress Code
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {dressCodes.map((code) => {
                 const isSelected = formData.crewDetails.dressCode === code.id;
                 return (
                   <div
                     key={code.id}
                     onClick={() => updateCrewDetails('dressCode', code.id)}
-                    className={`p-2.5 rounded-xl border cursor-pointer text-center text-xs font-medium transition-all ${
+                    className={`p-2.5 rounded-xl border cursor-pointer text-center text-xs font-medium active:scale-[0.98] transition-all duration-150 ${
                       isSelected
-                        ? 'border-cyan-500 bg-cyan-950/20 text-white ring-1 ring-cyan-500/30'
-                        : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-700'
+                        ? 'border-white bg-zinc-900 text-white'
+                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700'
                     }`}
                   >
                     {code.label}
@@ -425,9 +411,9 @@ export const Step3CategorySpecific: React.FC = () => {
             </div>
           </div>
 
-          {/* Additional Instructions */}
+          {/* Special Instructions */}
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
               Special Gate Instructions / Check-in Protocol
             </label>
             <textarea
@@ -436,8 +422,8 @@ export const Step3CategorySpecific: React.FC = () => {
               onChange={(e) =>
                 updateCrewDetails('additionalInstructions', e.target.value)
               }
-              placeholder="e.g. Enter through Gate 4 Service Entry; bring national ID card for security badge issuance."
-              className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              placeholder="e.g. Enter through Gate 4 Service Entry; bring national ID card for security pass."
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400"
             />
           </div>
         </div>
@@ -445,81 +431,71 @@ export const Step3CategorySpecific: React.FC = () => {
     );
   };
 
-  const getHeaderDetails = () => {
+  const getHeader = () => {
     switch (formData.category) {
       case 'planner':
         return {
-          title: 'Step 3: Services & Decor Expectations',
-          desc: 'Select necessary planning services, decor requirements, and operational notes.',
-          badge: 'Services & Deliverables',
-          badgeColor: 'bg-violet-950 text-violet-300 border-violet-800',
+          title: 'Deliverables & Decor Scope',
+          subtitle: 'Select specific planning services and aesthetic preferences.',
+          tag: 'Planner Terms',
         };
       case 'performer':
         return {
-          title: 'Step 3: Tech Rider, Sound & Fee Budget',
-          desc: 'Detail stage backline equipment, soundcheck requirements, and artist remuneration.',
-          badge: 'Equipment & Compensation',
-          badgeColor: 'bg-rose-950 text-rose-300 border-rose-800',
+          title: 'Technical Rider & Artist Remuneration',
+          subtitle: 'Detail stage backline equipment, soundcheck requirements, and artist fee.',
+          tag: 'Performer Terms',
         };
       case 'crew':
         return {
-          title: 'Step 3: Certifications, Logistics & Pay',
-          desc: 'Define qualification levels, on-site provisions, dress code, and compensation rates.',
-          badge: 'Logistics & Remuneration',
-          badgeColor: 'bg-cyan-950 text-cyan-300 border-cyan-800',
+          title: 'Certifications, Logistics & Pay',
+          subtitle: 'Define crew qualifications, provisions, dress code, and compensation rates.',
+          tag: 'Crew Terms',
         };
     }
   };
 
-  const header = getHeaderDetails();
+  const header = getHeader();
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-800 gap-3">
+    <div className="space-y-6 animate-fadeIn">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span
-              className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${header.badgeColor}`}
-            >
-              {header.badge}
-            </span>
-            <span className="text-xs text-neutral-500">
-              Adapting to {formData.eventName || 'your event'}
-            </span>
+          <div className="inline-block text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-1">
+            {header.tag}
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">
+          <h2 className="text-lg font-semibold text-white tracking-tight">
             {header.title}
           </h2>
-          <p className="text-sm text-neutral-400 mt-0.5">{header.desc}</p>
+          <p className="text-xs text-zinc-400 mt-0.5">{header.subtitle}</p>
         </div>
       </div>
 
-      {/* Dynamic Content based on Step 1 selection */}
-      <div className="p-6 rounded-2xl bg-neutral-900/40 border border-neutral-800/80">
+      {/* Content */}
+      <div className="p-5 rounded-2xl bg-zinc-950/40 border border-zinc-800/80">
         {formData.category === 'planner' && renderPlannerStep3()}
         {formData.category === 'performer' && renderPerformerStep3()}
         {formData.category === 'crew' && renderCrewStep3()}
       </div>
 
       {/* Navigation Footer */}
-      <div className="pt-6 border-t border-neutral-800 flex items-center justify-between">
+      <div className="pt-6 border-t border-zinc-800 flex items-center justify-between">
         <button
           type="button"
           onClick={goToPreviousStep}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 font-medium text-sm transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 font-medium text-xs active:scale-[0.96] transition-all"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Step 2</span>
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back</span>
         </button>
 
         <button
           type="button"
           onClick={goToNextStep}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 font-medium text-xs shadow-sm active:scale-[0.96] transition-all"
         >
-          <span>Review & Submit (Step 4)</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>Review & Submit</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>

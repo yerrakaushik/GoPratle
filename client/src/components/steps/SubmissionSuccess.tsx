@@ -3,18 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRequirementForm } from '../../context/FormContext';
-import {
-  CheckCircle,
-  Copy,
-  Check,
-  PlusCircle,
-  ArrowRight,
-  Database,
-  Sparkles,
-  Music,
-  Users,
-  Code2,
-} from 'lucide-react';
+import { Check, Copy, ArrowRight, PlusCircle, Code2 } from 'lucide-react';
 
 export const SubmissionSuccess: React.FC = () => {
   const { submittedData, resetForm } = useRequirementForm();
@@ -31,59 +20,30 @@ export const SubmissionSuccess: React.FC = () => {
     }
   };
 
-  const getCategoryDetails = () => {
-    switch (submittedData.category) {
-      case 'planner':
-        return {
-          title: 'Event Planner Requirement',
-          icon: Sparkles,
-          color: 'bg-violet-950 text-violet-300 border-violet-800',
-        };
-      case 'performer':
-        return {
-          title: 'Performer / Artist Requirement',
-          icon: Music,
-          color: 'bg-rose-950 text-rose-300 border-rose-800',
-        };
-      case 'crew':
-        return {
-          title: 'Technical Crew Requirement',
-          icon: Users,
-          color: 'bg-cyan-950 text-cyan-300 border-cyan-800',
-        };
-    }
-  };
-
-  const category = getCategoryDetails();
-  const CategoryIcon = category.icon;
-
   return (
-    <div className="p-8 sm:p-12 rounded-3xl bg-neutral-900/60 border border-neutral-800 text-center space-y-8 animate-fadeIn max-w-2xl mx-auto shadow-2xl shadow-indigo-500/5">
-      {/* Celebration Icon */}
-      <div className="relative inline-flex items-center justify-center">
-        <div className="w-20 h-20 rounded-full bg-emerald-500/10 border-2 border-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 animate-bounce">
-          <CheckCircle className="w-10 h-10 text-emerald-400" />
-        </div>
+    <div className="p-8 sm:p-10 rounded-2xl bg-zinc-950/60 border border-zinc-800 text-center space-y-6 max-w-xl mx-auto animate-fadeIn">
+      {/* Icon */}
+      <div className="w-12 h-12 rounded-full bg-white text-zinc-950 flex items-center justify-center mx-auto shadow-sm">
+        <Check className="w-6 h-6 stroke-[2.5]" />
       </div>
 
-      {/* Title & confirmation message */}
-      <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Requirement Successfully Posted!
+      {/* Headings */}
+      <div className="space-y-1">
+        <h2 className="text-xl font-semibold text-white tracking-tight">
+          Requirement Successfully Posted
         </h2>
-        <p className="text-sm text-neutral-400 max-w-md mx-auto">
-          Your event requirement has been verified, processed, and stored in the MongoDB backend database under the{' '}
-          <span className="text-white font-semibold">{submittedData.category}</span> category.
+        <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
+          The requirement document has been validated and committed to MongoDB under the{' '}
+          <span className="text-white font-mono uppercase">{submittedData.category}</span> schema.
         </p>
       </div>
 
-      {/* Record info pill & Category Badge */}
-      <div className="p-5 rounded-2xl bg-neutral-950/80 border border-neutral-800 text-left space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-neutral-800">
+      {/* Document Key Information */}
+      <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 text-left space-y-2.5">
+        <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-neutral-400">MongoDB Document ID:</span>
-            <code className="text-xs font-mono text-emerald-400 bg-neutral-900 px-2 py-0.5 rounded border border-neutral-800">
+            <span className="text-[11px] font-mono text-zinc-500">Document ID:</span>
+            <code className="text-xs font-mono text-white bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800">
               {submittedData._id}
             </code>
           </div>
@@ -91,72 +51,72 @@ export const SubmissionSuccess: React.FC = () => {
           <button
             type="button"
             onClick={handleCopyId}
-            className="inline-flex items-center gap-1 text-xs text-neutral-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-400 hover:text-white transition-colors"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400">Copied!</span>
+                <Check className="w-3 h-3 text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5" />
-                <span>Copy ID</span>
+                <Copy className="w-3 h-3" />
+                <span>Copy</span>
               </>
             )}
           </button>
         </div>
 
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between text-xs pt-1">
           <div>
-            <div className="text-xs text-neutral-500">Event Title</div>
-            <div className="text-sm font-semibold text-white">
-              {submittedData.eventName}
-            </div>
+            <span className="text-zinc-500 block text-[11px] font-mono">Event Title</span>
+            <span className="text-white font-medium">{submittedData.eventName}</span>
           </div>
 
-          <div className={`px-3 py-1 rounded-full border text-xs font-semibold flex items-center gap-1.5 ${category.color}`}>
-            <CategoryIcon className="w-3.5 h-3.5" />
-            <span>{category.title}</span>
+          <div className="text-right">
+            <span className="text-zinc-500 block text-[11px] font-mono">Category</span>
+            <span className="text-xs font-mono uppercase text-zinc-300">
+              {submittedData.category}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* JSON Viewer toggle */}
+      {/* JSON toggle */}
       <div>
         <button
           type="button"
           onClick={() => setShowJson(!showJson)}
-          className="text-xs text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1.5 transition-colors"
+          className="text-xs font-mono text-zinc-400 hover:text-white inline-flex items-center gap-1.5 transition-colors"
         >
-          <Code2 className="w-3.5 h-3.5" />
-          <span>{showJson ? 'Hide MongoDB Document' : 'View Saved MongoDB Record'}</span>
+          <Code2 className="w-3 h-3" />
+          <span>{showJson ? 'Hide MongoDB Record' : 'View Saved MongoDB Record'}</span>
         </button>
 
         {showJson && (
-          <div className="mt-3 p-4 rounded-xl bg-neutral-950 border border-neutral-800 text-left font-mono text-xs text-neutral-300 max-h-60 overflow-y-auto">
+          <div className="mt-3 p-4 rounded-xl bg-zinc-950 border border-zinc-800 text-left font-mono text-[11px] text-zinc-300 max-h-56 overflow-y-auto">
             <pre>{JSON.stringify(submittedData, null, 2)}</pre>
           </div>
         )}
       </div>
 
-      {/* Action CTA Buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 border-t border-neutral-800">
+      {/* Actions */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
         <Link
           href="/postings"
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02]"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 font-medium text-xs shadow-sm active:scale-[0.96] transition-all"
         >
-          <span>View All Postings in Feed</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>Browse All Postings</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
 
         <button
           type="button"
           onClick={resetForm}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 font-medium text-sm transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-medium text-xs active:scale-[0.96] transition-all"
         >
-          <PlusCircle className="w-4 h-4" />
-          <span>Create Another Requirement</span>
+          <PlusCircle className="w-3.5 h-3.5" />
+          <span>Create Another</span>
         </button>
       </div>
     </div>

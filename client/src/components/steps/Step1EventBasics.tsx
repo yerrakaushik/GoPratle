@@ -2,17 +2,8 @@
 
 import React from 'react';
 import { useRequirementForm } from '../../context/FormContext';
-import {
-  Calendar,
-  MapPin,
-  Sparkles,
-  Music,
-  Users,
-  Building,
-  Check,
-  Zap,
-} from 'lucide-react';
 import { CategoryType } from '../../types/requirement';
+import { Sparkles, Music2, Wrench, ArrowRight, Check } from 'lucide-react';
 
 const EVENT_TYPES = [
   'Wedding',
@@ -42,76 +33,62 @@ export const Step1EventBasics: React.FC = () => {
     title: string;
     description: string;
     icon: React.ComponentType<{ className?: string }>;
-    accentColor: string;
     tag: string;
   }> = [
     {
       id: 'planner',
       title: 'Event Planner',
-      description:
-        'Professional planners, coordinators, decorators, and agency leads to organize your event.',
+      description: 'Full planning, day-of coordination, vendor sourcing, and decor management.',
       icon: Sparkles,
-      accentColor: 'border-violet-500 bg-violet-950/20 text-violet-400 ring-violet-500/30',
-      tag: 'Coordination & Decor',
+      tag: 'Coordination',
     },
     {
       id: 'performer',
       title: 'Performer / Artist',
-      description:
-        'Bands, solo singers, DJs, standup comedians, dancers, magicians, and hosts to entertain.',
-      icon: Music,
-      accentColor: 'border-rose-500 bg-rose-950/20 text-rose-400 ring-rose-500/30',
-      tag: 'Live Entertainment',
+      description: 'Bands, vocalists, DJs, standup comedians, dancers, and stage talent.',
+      icon: Music2,
+      tag: 'Live Act',
     },
     {
       id: 'crew',
       title: 'Technical Crew',
-      description:
-        'Sound engineers, lighting technicians, stagehands, camera operators, and production staff.',
-      icon: Users,
-      accentColor: 'border-cyan-500 bg-cyan-950/20 text-cyan-400 ring-cyan-500/30',
-      tag: 'Operations & AV',
+      description: 'FOH sound engineers, lighting operators, stagehands, and video crew.',
+      icon: Wrench,
+      tag: 'AV & Operations',
     },
   ];
 
   return (
     <div className="space-y-8 animate-fadeIn">
-      {/* Header bar with Autofill test helper */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-800 gap-3">
+      {/* Step Header & Autofill utility */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-zinc-800 gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-indigo-400" />
-            Step 1: Event Basics
+          <h2 className="text-lg font-semibold text-white tracking-tight">
+            Event Basics & Category
           </h2>
-          <p className="text-sm text-neutral-400 mt-0.5">
-            Set up the foundation for your event and choose the requirement category.
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Define basic event parameters. Steps 2 and 3 adapt based on the role selected below.
           </p>
         </div>
 
-        {/* Demo Fast-Track autofill */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => fillSampleData()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900 border border-indigo-700/50 text-indigo-300 text-xs font-semibold transition-all shadow-sm group"
-            title="Auto-fill realistic demo data for the selected category"
-          >
-            <Zap className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
-            Auto-fill Sample Data
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => fillSampleData()}
+          className="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white text-xs font-mono active:scale-[0.96] transition-all"
+        >
+          Autofill Sample Data
+        </button>
       </div>
 
-      {/* Category Selection Cards (Core Requirement) */}
+      {/* Category Selection Cards (No gradients, tactile super-design) */}
       <div>
-        <label className="block text-sm font-semibold text-neutral-200 mb-2">
-          Select Category Needed <span className="text-rose-400">*</span>
-        </label>
-        <p className="text-xs text-neutral-400 mb-4">
-          Steps 2 & 3 will automatically configure to capture requirements specific to this role.
-        </p>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+            Select Requirement Category <span className="text-rose-400">*</span>
+          </label>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {categories.map((cat) => {
             const isSelected = formData.category === cat.id;
             const Icon = cat.icon;
@@ -120,53 +97,51 @@ export const Step1EventBasics: React.FC = () => {
               <div
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`relative p-5 rounded-2xl cursor-pointer border transition-all duration-200 flex flex-col justify-between group ${
+                className={`p-4 rounded-xl cursor-pointer border transition-all duration-150 flex flex-col justify-between active:scale-[0.98] ${
                   isSelected
-                    ? `${cat.accentColor} border-2 shadow-lg shadow-indigo-500/10 ring-2`
-                    : 'border-neutral-800 bg-neutral-900/60 hover:border-neutral-700 hover:bg-neutral-900 text-neutral-300'
+                    ? 'border-white bg-zinc-900 text-white shadow-sm ring-1 ring-white/20'
+                    : 'border-zinc-800/80 bg-zinc-950/60 hover:border-zinc-700 hover:bg-zinc-900/40 text-zinc-400'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                        isSelected
-                          ? 'bg-neutral-900 shadow-inner'
-                          : 'bg-neutral-800 text-neutral-400 group-hover:text-white'
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                        isSelected ? 'bg-white text-zinc-950' : 'bg-zinc-900 text-zinc-400'
                       }`}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4 stroke-[2]" />
                     </div>
 
                     <span
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded ${
                         isSelected
-                          ? 'bg-neutral-900 border border-current'
-                          : 'bg-neutral-800 text-neutral-400'
+                          ? 'bg-zinc-800 text-zinc-200'
+                          : 'bg-zinc-900 text-zinc-500'
                       }`}
                     >
                       {cat.tag}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white mb-1">{cat.title}</h3>
-                  <p className="text-xs text-neutral-400 leading-relaxed">
+                  <h3 className="text-sm font-semibold text-white mb-1">{cat.title}</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
                     {cat.description}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs font-medium">
-                  <span className={isSelected ? 'text-white' : 'text-neutral-500'}>
+                <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-[11px]">
+                  <span className={isSelected ? 'text-zinc-200 font-medium' : 'text-zinc-500'}>
                     {isSelected ? 'Active Selection' : 'Click to select'}
                   </span>
                   <div
-                    className={`w-5 h-5 rounded-full flex items-center justify-center border transition-all ${
+                    className={`w-4 h-4 rounded-full flex items-center justify-center border transition-all ${
                       isSelected
-                        ? 'border-indigo-500 bg-indigo-600 text-white'
-                        : 'border-neutral-700 group-hover:border-neutral-500'
+                        ? 'border-white bg-white text-zinc-950'
+                        : 'border-zinc-700'
                     }`}
                   >
-                    {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                    {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
                   </div>
                 </div>
               </div>
@@ -178,45 +153,45 @@ export const Step1EventBasics: React.FC = () => {
         )}
       </div>
 
-      {/* Event Details Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+      {/* Event Details Form */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
         {/* Event Name */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Event Name <span className="text-rose-400">*</span>
           </label>
           <input
             type="text"
             value={formData.eventName}
             onChange={(e) => updateEventBasics('eventName', e.target.value)}
-            placeholder="e.g., Grand Annual Tech Gala 2026, Kabir's Sangeet Night"
-            className={`w-full px-4 py-2.5 rounded-xl bg-neutral-900/90 border text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
-              errors.eventName ? 'border-rose-500 bg-rose-950/10' : 'border-neutral-800'
+            placeholder="e.g., Grand Annual Tech Gala 2026"
+            className={`w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all ${
+              errors.eventName ? 'border-rose-500' : 'border-zinc-800'
             }`}
           />
           {errors.eventName ? (
             <p className="text-xs text-rose-400 mt-1">{errors.eventName}</p>
           ) : (
-            <p className="text-[11px] text-neutral-500 mt-1">
-              Give your event a clear, descriptive title.
+            <p className="text-[11px] text-zinc-500 mt-1">
+              Clear title describing the occasion.
             </p>
           )}
         </div>
 
         {/* Event Type */}
         <div>
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Event Type <span className="text-rose-400">*</span>
           </label>
           <select
             value={formData.eventType}
             onChange={(e) => updateEventBasics('eventType', e.target.value)}
-            className={`w-full px-4 py-2.5 rounded-xl bg-neutral-900 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
-              errors.eventType ? 'border-rose-500' : 'border-neutral-800'
+            className={`w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border text-white text-sm focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all ${
+              errors.eventType ? 'border-rose-500' : 'border-zinc-800'
             }`}
           >
             {EVENT_TYPES.map((type) => (
-              <option key={type} value={type} className="bg-neutral-900 text-white">
+              <option key={type} value={type} className="bg-zinc-950 text-white">
                 {type}
               </option>
             ))}
@@ -226,23 +201,20 @@ export const Step1EventBasics: React.FC = () => {
           )}
         </div>
 
-        {/* Location (City / Region) */}
+        {/* Location */}
         <div>
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Location (City, State) <span className="text-rose-400">*</span>
           </label>
-          <div className="relative">
-            <input
-              type="text"
-              value={formData.location}
-              onChange={(e) => updateEventBasics('location', e.target.value)}
-              placeholder="e.g., Mumbai, Maharashtra / Bengaluru, KA"
-              className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-900 border text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
-                errors.location ? 'border-rose-500' : 'border-neutral-800'
-              }`}
-            />
-            <MapPin className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3" />
-          </div>
+          <input
+            type="text"
+            value={formData.location}
+            onChange={(e) => updateEventBasics('location', e.target.value)}
+            placeholder="e.g., Mumbai, Maharashtra"
+            className={`w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all ${
+              errors.location ? 'border-rose-500' : 'border-zinc-800'
+            }`}
+          />
           {errors.location && (
             <p className="text-xs text-rose-400 mt-1">{errors.location}</p>
           )}
@@ -250,58 +222,48 @@ export const Step1EventBasics: React.FC = () => {
 
         {/* Venue (Optional) */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-neutral-200 mb-1.5 flex items-center justify-between">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5 flex items-center justify-between">
             <span>Specific Venue / Landmark</span>
-            <span className="text-xs text-neutral-500 font-normal">Optional</span>
+            <span className="text-[11px] text-zinc-500 font-mono font-normal">Optional</span>
           </label>
-          <div className="relative">
-            <input
-              type="text"
-              value={formData.venue}
-              onChange={(e) => updateEventBasics('venue', e.target.value)}
-              placeholder="e.g., The Grand Hyatt Ballroom / Jio World Convention Centre"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
-            />
-            <Building className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3" />
-          </div>
+          <input
+            type="text"
+            value={formData.venue}
+            onChange={(e) => updateEventBasics('venue', e.target.value)}
+            placeholder="e.g., The Grand Ballroom / Jio World Convention Centre"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all"
+          />
         </div>
 
-        {/* Date / Date Range Section */}
-        <div className="md:col-span-2 p-5 rounded-2xl bg-neutral-900/50 border border-neutral-800 space-y-4">
+        {/* Date Schedule Container */}
+        <div className="md:col-span-2 p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 space-y-3">
           <div className="flex items-center justify-between">
-            <div>
-              <span className="text-sm font-semibold text-neutral-200">
-                Event Schedule & Dates
-              </span>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Specify whether this event is a single-day occasion or spans across multiple dates.
-              </p>
-            </div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+              Schedule & Dates
+            </span>
 
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-neutral-300">
+            <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-400 hover:text-zinc-200">
               <input
                 type="checkbox"
                 checked={formData.isDateRange}
                 onChange={(e) => updateEventBasics('isDateRange', e.target.checked)}
-                className="w-4 h-4 rounded text-indigo-600 bg-neutral-800 border-neutral-700 focus:ring-indigo-500 focus:ring-offset-neutral-900"
+                className="w-3.5 h-3.5 rounded bg-zinc-900 border-zinc-700 text-white focus:ring-0"
               />
-              Multi-day / Date Range
+              Multi-day Date Range
             </label>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            {/* Start Date */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
-                {formData.isDateRange ? 'Start Date' : 'Event Date'}{' '}
-                <span className="text-rose-400">*</span>
+              <label className="block text-xs text-zinc-400 mb-1 font-mono">
+                {formData.isDateRange ? 'Start Date' : 'Event Date'} <span className="text-rose-400">*</span>
               </label>
               <input
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => updateEventBasics('startDate', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
-                  errors.startDate ? 'border-rose-500' : 'border-neutral-800'
+                className={`w-full px-3 py-2 rounded-lg bg-zinc-900 border text-white text-xs focus:outline-none focus:border-zinc-400 ${
+                  errors.startDate ? 'border-rose-500' : 'border-zinc-800'
                 }`}
               />
               {errors.startDate && (
@@ -309,10 +271,9 @@ export const Step1EventBasics: React.FC = () => {
               )}
             </div>
 
-            {/* End Date (if date range) */}
             {formData.isDateRange && (
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs text-zinc-400 mb-1 font-mono">
                   End Date <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -320,8 +281,8 @@ export const Step1EventBasics: React.FC = () => {
                   min={formData.startDate || undefined}
                   value={formData.endDate}
                   onChange={(e) => updateEventBasics('endDate', e.target.value)}
-                  className={`w-full px-3.5 py-2.5 rounded-xl bg-neutral-950 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
-                    errors.endDate ? 'border-rose-500' : 'border-neutral-800'
+                  className={`w-full px-3 py-2 rounded-lg bg-zinc-900 border text-white text-xs focus:outline-none focus:border-zinc-400 ${
+                    errors.endDate ? 'border-rose-500' : 'border-zinc-800'
                   }`}
                 />
                 {errors.endDate && (
@@ -332,52 +293,50 @@ export const Step1EventBasics: React.FC = () => {
           </div>
         </div>
 
-        {/* Contact Info (Organizer Details) */}
-        <div className="md:col-span-2 pt-2">
-          <span className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">
-            Contact & Organizer Details (Optional)
+        {/* Contact info */}
+        <div className="md:col-span-2 pt-1">
+          <span className="block text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+            Organizer Contact (Optional)
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               type="text"
               value={formData.contactName}
               onChange={(e) => updateEventBasics('contactName', e.target.value)}
-              placeholder="Contact Person Name"
-              className="px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              placeholder="Contact Name"
+              className="px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
             />
             <input
               type="email"
               value={formData.contactEmail}
               onChange={(e) => updateEventBasics('contactEmail', e.target.value)}
               placeholder="Email Address"
-              className="px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
             />
             <input
               type="tel"
               value={formData.contactPhone}
               onChange={(e) => updateEventBasics('contactPhone', e.target.value)}
-              placeholder="Phone / WhatsApp Number"
-              className="px-3.5 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              placeholder="Phone Number"
+              className="px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
             />
           </div>
         </div>
       </div>
 
       {/* Navigation Footer */}
-      <div className="pt-6 border-t border-neutral-800 flex items-center justify-between">
-        <p className="text-xs text-neutral-500">
-          Required fields are marked with <span className="text-rose-400">*</span>
+      <div className="pt-6 border-t border-zinc-800 flex items-center justify-between">
+        <p className="text-xs font-mono text-zinc-500">
+          * Required fields
         </p>
 
         <button
           type="button"
           onClick={goToNextStep}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 font-medium text-xs shadow-sm active:scale-[0.96] transition-all"
         >
           <span>Continue to Step 2</span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-white/20 uppercase font-semibold">
-            {formData.category}
-          </span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>

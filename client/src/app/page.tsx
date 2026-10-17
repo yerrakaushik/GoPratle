@@ -9,37 +9,33 @@ import { Step2CategorySpecific } from '../components/steps/Step2CategorySpecific
 import { Step3CategorySpecific } from '../components/steps/Step3CategorySpecific';
 import { Step4ReviewSubmit } from '../components/steps/Step4ReviewSubmit';
 import { SubmissionSuccess } from '../components/steps/SubmissionSuccess';
-import { Sparkles, Layers, ShieldCheck, Database } from 'lucide-react';
+import { Layers, Database, ShieldCheck } from 'lucide-react';
 
 const FlowWizard: React.FC = () => {
   const { currentStep, submittedData } = useRequirementForm();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Hero Header */}
-      <div className="text-center mb-8 sm:mb-10 space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/70 border border-indigo-800 text-indigo-300 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Intelligent Event Requirements Engine</span>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      {/* Hero Header (Editorial, No AI Slop) */}
+      <div className="text-center mb-8 space-y-2">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <span>Requirement Engine</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Post Your Event Requirement
+        <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+          Post an Event Requirement
         </h1>
-        <p className="text-sm sm:text-base text-neutral-400 max-w-xl mx-auto">
-          Specify your event basics and let our dynamic 4-step wizard configure customized technical fields for Planners, Artists, or Crew.
+        <p className="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
+          Configure event basics and let the 4-step flow adapt specifications specifically for Planners, Performers, or Crew.
         </p>
       </div>
 
-      {/* Main Wizard Card */}
-      <div className="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-        {/* Glow accent */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-
+      {/* Main Wizard Surface */}
+      <div className="bg-zinc-900/30 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 shadow-sm">
         {submittedData ? (
           <SubmissionSuccess />
         ) : (
-          <div className="relative z-10">
+          <div>
             <StepIndicator />
 
             {currentStep === 1 && <Step1EventBasics />}
@@ -50,36 +46,36 @@ const FlowWizard: React.FC = () => {
         )}
       </div>
 
-      {/* Key Architectural Highlights Banner */}
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-400">
-        <div className="p-4 rounded-2xl bg-neutral-900/30 border border-neutral-800/60 flex items-start gap-3">
-          <Layers className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-          <div>
-            <div className="font-semibold text-white mb-0.5">Adaptive 4-Step Flow</div>
-            <p className="text-neutral-400 leading-relaxed">
-              Steps 2 & 3 dynamically rewire inputs based on chosen role (Planner, Performer, Crew).
-            </p>
+      {/* Architectural Pillars (Clean Minimalist Cards) */}
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-zinc-400">
+        <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
+          <div className="flex items-center gap-2 mb-1 text-white font-medium">
+            <Layers className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Adaptive Role Routing</span>
           </div>
+          <p className="text-zinc-500 leading-relaxed text-[11px]">
+            Steps 2 & 3 surface role-specific deliverables based on chosen category.
+          </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-neutral-900/30 border border-neutral-800/60 flex items-start gap-3">
-          <Database className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
-          <div>
-            <div className="font-semibold text-white mb-0.5">Categorized MongoDB Data</div>
-            <p className="text-neutral-400 leading-relaxed">
-              Subdocuments cleanly isolate category-specific data with zero leakage or schema bloat.
-            </p>
+        <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
+          <div className="flex items-center gap-2 mb-1 text-white font-medium">
+            <Database className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Isolated MongoDB Schemas</span>
           </div>
+          <p className="text-zinc-500 leading-relaxed text-[11px]">
+            Subdocuments prevent schema contamination and enforce clean domain boundaries.
+          </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-neutral-900/30 border border-neutral-800/60 flex items-start gap-3">
-          <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-          <div>
-            <div className="font-semibold text-white mb-0.5">Dual-Tier Validation</div>
-            <p className="text-neutral-400 leading-relaxed">
-              Client-side responsive feedback plus server-side Zod and Mongoose schema constraints.
-            </p>
+        <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
+          <div className="flex items-center gap-2 mb-1 text-white font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Dual-Tier Validation</span>
           </div>
+          <p className="text-zinc-500 leading-relaxed text-[11px]">
+            Client-side feedback paired with strict server Zod validation and Mongoose schemas.
+          </p>
         </div>
       </div>
     </div>
@@ -89,7 +85,7 @@ const FlowWizard: React.FC = () => {
 export default function HomePage() {
   return (
     <FormProvider>
-      <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+      <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
         <Navbar />
         <main className="flex-1">
           <FlowWizard />

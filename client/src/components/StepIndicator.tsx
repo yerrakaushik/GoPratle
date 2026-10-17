@@ -2,12 +2,11 @@
 
 import React from 'react';
 import { useRequirementForm } from '../context/FormContext';
-import { Check, Calendar, Settings, Sliders, Send } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 export const StepIndicator: React.FC = () => {
   const { currentStep, formData, goToStep } = useRequirementForm();
 
-  // Dynamic titles depending on category
   const getStep2Title = () => {
     switch (formData.category) {
       case 'planner':
@@ -17,127 +16,89 @@ export const StepIndicator: React.FC = () => {
       case 'crew':
         return 'Roles & Headcount';
       default:
-        return 'Category Details';
+        return 'Scope';
     }
   };
 
   const getStep3Title = () => {
     switch (formData.category) {
       case 'planner':
-        return 'Services & Scope';
+        return 'Services & Budget';
       case 'performer':
-        return 'Tech Rider & Budget';
+        return 'Rider & Fee';
       case 'crew':
         return 'Logistics & Pay';
       default:
-        return 'Requirements & Fee';
+        return 'Details';
     }
   };
 
   const steps = [
-    { number: 1, title: 'Event Basics', subtitle: 'Type, dates & category', icon: Calendar },
-    { number: 2, title: getStep2Title(), subtitle: 'Core specifications', icon: Settings },
-    { number: 3, title: getStep3Title(), subtitle: 'Deliverables & budgets', icon: Sliders },
-    { number: 4, title: 'Review & Submit', subtitle: 'Confirm & store data', icon: Send },
+    { number: 1, title: 'Event Basics' },
+    { number: 2, title: getStep2Title() },
+    { number: 3, title: getStep3Title() },
+    { number: 4, title: 'Review & Submit' },
   ];
-
-  const getCategoryColor = () => {
-    switch (formData.category) {
-      case 'planner':
-        return {
-          activeBg: 'bg-violet-600',
-          activeBorder: 'border-violet-500',
-          activeText: 'text-violet-400',
-          ring: 'ring-violet-500/30',
-        };
-      case 'performer':
-        return {
-          activeBg: 'bg-rose-600',
-          activeBorder: 'border-rose-500',
-          activeText: 'text-rose-400',
-          ring: 'ring-rose-500/30',
-        };
-      case 'crew':
-        return {
-          activeBg: 'bg-cyan-600',
-          activeBorder: 'border-cyan-500',
-          activeText: 'text-cyan-400',
-          ring: 'ring-cyan-500/30',
-        };
-    }
-  };
-
-  const colors = getCategoryColor();
 
   return (
     <div className="w-full mb-8">
-      {/* Step Progress Line on Desktop */}
-      <div className="relative">
-        <div className="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-neutral-800 -z-0" />
-        <div
-          className="absolute top-1/2 left-0 h-0.5 -translate-y-1/2 transition-all duration-500 ease-out -z-0 bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400"
-          style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
-        />
+      {/* Precision Step Bar */}
+      <div className="grid grid-cols-4 gap-2 sm:gap-3">
+        {steps.map((step) => {
+          const isCompleted = currentStep > step.number;
+          const isCurrent = currentStep === step.number;
 
-        <div className="flex items-center justify-between relative z-10">
-          {steps.map((step) => {
-            const isCompleted = currentStep > step.number;
-            const isCurrent = currentStep === step.number;
-            const StepIcon = step.icon;
-
-            return (
-              <button
-                key={step.number}
-                type="button"
-                onClick={() => goToStep(step.number)}
-                disabled={step.number > currentStep}
-                className={`flex flex-col items-center group transition-all duration-200 focus:outline-none ${
-                  step.number > currentStep ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-                }`}
-              >
-                <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center font-semibold text-sm transition-all duration-300 shadow-md ${
-                    isCompleted
-                      ? 'bg-emerald-600 text-white shadow-emerald-500/20'
-                      : isCurrent
-                      ? `${colors.activeBg} text-white shadow-lg ring-4 ${colors.ring}`
-                      : 'bg-neutral-900 border border-neutral-700 text-neutral-400 group-hover:border-neutral-500'
+          return (
+            <button
+              key={step.number}
+              type="button"
+              onClick={() => goToStep(step.number)}
+              disabled={step.number > currentStep}
+              className={`text-left p-3 rounded-xl border transition-all duration-150 relative group ${
+                isCurrent
+                  ? 'border-zinc-400 bg-zinc-900/90 text-white shadow-sm ring-1 ring-zinc-500/20'
+                  : isCompleted
+                  ? 'border-zinc-800 bg-zinc-950/60 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-900/60 active:scale-[0.98]'
+                  : 'border-zinc-800/60 bg-zinc-950/20 text-zinc-600 cursor-not-allowed opacity-60'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <span
+                  className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${
+                    isCurrent
+                      ? 'text-white'
+                      : isCompleted
+                      ? 'text-zinc-400'
+                      : 'text-zinc-600'
                   }`}
                 >
-                  {isCompleted ? (
-                    <Check className="w-5 h-5 stroke-[2.5]" />
-                  ) : (
-                    <StepIcon className="w-5 h-5" />
-                  )}
-                </div>
+                  Step {step.number}
+                </span>
 
-                <div className="mt-2 text-center">
-                  <div
-                    className={`text-xs font-semibold uppercase tracking-wider ${
-                      isCurrent
-                        ? colors.activeText
-                        : isCompleted
-                        ? 'text-emerald-400'
-                        : 'text-neutral-500'
-                    }`}
-                  >
-                    Step {step.number}
-                  </div>
-                  <div
-                    className={`text-sm font-medium ${
-                      isCurrent ? 'text-white' : 'text-neutral-400'
-                    }`}
-                  >
-                    {step.title}
-                  </div>
-                  <div className="text-[11px] text-neutral-500 hidden sm:block">
-                    {step.subtitle}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                {isCompleted && (
+                  <span className="w-4 h-4 rounded-full bg-zinc-100 text-zinc-950 flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5 stroke-[2.5]" />
+                  </span>
+                )}
+                {isCurrent && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                )}
+              </div>
+
+              <div
+                className={`text-xs font-medium truncate ${
+                  isCurrent
+                    ? 'text-white'
+                    : isCompleted
+                    ? 'text-zinc-300'
+                    : 'text-zinc-500'
+                }`}
+              >
+                {step.title}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
