@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { Navbar } from '../../components/Navbar';
@@ -16,62 +18,85 @@ import {
   LayoutGrid,
   List,
   Download,
-  Calendar,
-  MapPin,
 } from 'lucide-react';
 
 export default function PostingsPage() {
   const [requirements, setRequirements] = useState<RequirementDocument[]>([]);
-  const [stats, setStats] = useState<{
-    total: number;
-    categories: { planner: number; performer: number; crew: number };
-  }>({
-    total: 0,
-    categories: { planner: 0, performer: 0, crew: 0 },
-  });
-
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<'all' | 'planner' | 'performer' | 'crew'>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'name'>('newest');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedDoc, setSelectedDoc] = useState<RequirementDocument | null>(null);
 
+  // Fetch all requirements from API
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [listRes, statsRes] = await Promise.all([
-        api.getRequirements({
-          category: activeCategory !== 'all' ? activeCategory : undefined,
-          search: searchTerm.trim() || undefined,
-        }),
-        api.getStats().catch(() => null),
-      ]);
-
-      if (listRes.success) {
-        setRequirements(listRes.data);
-      }
-
-      if (statsRes && statsRes.success) {
-        setStats(statsRes.data);
+      // Fetch all postings without server-side filtering so we have the full array for dynamic counters
+      const res = await api.getRequirements();
+      if (res.success && Array.isArray(res.data)) {
+        setRequirements(res.data);
       }
     } catch (err) {
       console.error('Failed to load postings:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [activeCategory, searchTerm]);
+  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 200);
-    return () => clearTimeout(timer);
+    fetchData();
   }, [fetchData]);
+
+  // Compute live counts directly from the requirements array
+  const totalCount = requirements.length;
+  const plannerCount = useMemo(
+    () => requirements.filter((r) => r.category === 'planner').length,
+    [requirements]
+  );
+  const performerCount = useMemo(
+    () => requirements.filter((r) => r.category === 'performer').length,
+    [requirements]
+  );
+  const crewCount = useMemo(
+    () => requirements.filter((r) => r.category === 'crew').length,
+    [requirements]
+  );
+
+  // Client-side filtering ensures instant, infallible category filtering
+  const filteredRequirements = useMemo(() => {
+    return requirements.filter((item) => {
+      // Category Filter: strict 1-to-1 matching
+      if (activeCategory === 'planner' && item.category !== 'planner') {
+        return false;
+      }
+      if (activeCategory === 'performer' && item.category !== 'performer') {
+        return false;
+      }
+      if (activeCategory === 'crew' && item.category !== 'crew') {
+        return false;
+      }
+
+      // Search Query Filter
+      if (searchTerm.trim()) {
+        const q = searchTerm.trim().toLowerCase();
+        const matchesName = item.eventName?.toLowerCase().includes(q);
+        const matchesLocation = item.location?.toLowerCase().includes(q);
+        const matchesVenue = item.venue?.toLowerCase().includes(q);
+        const matchesType = item.eventType?.toLowerCase().includes(q);
+        if (!matchesName && !matchesLocation && !matchesVenue && !matchesType) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [requirements, activeCategory, searchTerm]);
 
   // Client-side dynamic sorting
   const sortedRequirements = useMemo(() => {
-    return [...requirements].sort((a, b) => {
+    return [...filteredRequirements].sort((a, b) => {
       if (sortBy === 'newest') {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
@@ -79,11 +104,11 @@ export default function PostingsPage() {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       }
       if (sortBy === 'name') {
-        return a.eventName.localeCompare(b.eventName);
+        return (a.eventName || '').localeCompare(b.eventName || '');
       }
       return 0;
     });
-  }, [requirements, sortBy]);
+  }, [filteredRequirements, sortBy]);
 
   // Export to JSON file
   const handleExportJSON = () => {
@@ -149,60 +174,92 @@ export default function PostingsPage() {
           </div>
         </div>
 
-        {/* Stats Metrics Cards */}
+        {/* Stats Metrics Cards (Dynamically computed from requirements array) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
             <span className="text-[11px] font-mono uppercase text-zinc-500 block">Total Requirements</span>
             <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
-              {stats.total}
+              {totalCount}
             </span>
           </div>
 
           <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
             <span className="text-[11px] font-mono uppercase text-zinc-500 block">Planners</span>
             <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
-              {stats.categories.planner}
+              {plannerCount}
             </span>
           </div>
 
           <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
             <span className="text-[11px] font-mono uppercase text-zinc-500 block">Performers</span>
             <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
-              {stats.categories.performer}
+              {performerCount}
             </span>
           </div>
 
           <div className="p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800">
             <span className="text-[11px] font-mono uppercase text-zinc-500 block">Crew</span>
             <span className="text-xl font-bold font-mono text-white mt-1 block tabular-nums">
-              {stats.categories.crew}
+              {crewCount}
             </span>
           </div>
         </div>
 
         {/* Filter Controls, Search, Sort & View Toggle */}
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-2">
-          {/* Category Tabs */}
+          {/* Category Tabs: Strictly mapped */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-            {[
-              { id: 'all', label: 'All' },
-              { id: 'planner', label: 'Planners' },
-              { id: 'performer', label: 'Performers' },
-              { id: 'crew', label: 'Crew' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveCategory(tab.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
-                  activeCategory === tab.id
-                    ? 'bg-zinc-100 text-zinc-950 shadow-sm'
-                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            <button
+              type="button"
+              id="filter-all"
+              onClick={() => setActiveCategory('all')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
+                activeCategory === 'all'
+                  ? 'bg-zinc-100 text-zinc-950 shadow-sm font-semibold'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
+              }`}
+            >
+              All ({totalCount})
+            </button>
+
+            <button
+              type="button"
+              id="filter-planner"
+              onClick={() => setActiveCategory('planner')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
+                activeCategory === 'planner'
+                  ? 'bg-zinc-100 text-zinc-950 shadow-sm font-semibold'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
+              }`}
+            >
+              Planners ({plannerCount})
+            </button>
+
+            <button
+              type="button"
+              id="filter-performer"
+              onClick={() => setActiveCategory('performer')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
+                activeCategory === 'performer'
+                  ? 'bg-zinc-100 text-zinc-950 shadow-sm font-semibold'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
+              }`}
+            >
+              Performers ({performerCount})
+            </button>
+
+            <button
+              type="button"
+              id="filter-crew"
+              onClick={() => setActiveCategory('crew')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium active:scale-[0.96] transition-all whitespace-nowrap ${
+                activeCategory === 'crew'
+                  ? 'bg-zinc-100 text-zinc-950 shadow-sm font-semibold'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
+              }`}
+            >
+              Crew ({crewCount})
+            </button>
           </div>
 
           {/* Search, Sort, View Controls */}
@@ -311,7 +368,7 @@ export default function PostingsPage() {
                     <td className="p-3 font-medium text-white">{req.eventName}</td>
                     <td className="p-3">
                       <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">
-                        {req.category}
+                        {req.category === 'planner' ? 'Planner' : req.category === 'performer' ? 'Performer' : 'Crew'}
                       </span>
                     </td>
                     <td className="p-3 text-zinc-400">{req.eventType}</td>
@@ -349,7 +406,7 @@ export default function PostingsPage() {
                   {/* Category pill & date */}
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300">
-                      {req.category}
+                      {req.category === 'planner' ? 'Planner' : req.category === 'performer' ? 'Performer' : 'Technical Crew'}
                     </span>
 
                     <span className="text-[11px] font-mono text-zinc-500 tabular-nums">
@@ -371,7 +428,7 @@ export default function PostingsPage() {
                   <div className="space-y-1 text-xs text-zinc-400 pt-2 border-t border-zinc-800/60 font-mono text-[11px]">
                     <div>{req.location}{req.venue ? ` • ${req.venue}` : ''}</div>
                     <div className="tabular-nums text-zinc-500">
-                      {req.isDateRange
+                      {req.isDateRange && req.endDate
                         ? `${new Date(req.startDate).toLocaleDateString()} → ${new Date(
                             req.endDate
                           ).toLocaleDateString()}`
@@ -383,19 +440,19 @@ export default function PostingsPage() {
                   <div className="pt-1 text-xs">
                     {req.category === 'planner' && req.plannerDetails && (
                       <div className="text-zinc-400 font-mono text-[11px]">
-                        Budget: <span className="text-white">{req.plannerDetails.overallBudget}</span>
+                        Budget: <span className="text-white">{req.plannerDetails.overallBudget || '—'}</span>
                       </div>
                     )}
 
                     {req.category === 'performer' && req.performerDetails && (
                       <div className="text-zinc-400 font-mono text-[11px]">
-                        Act: <span className="text-white capitalize">{req.performerDetails.performerType.replace(/_/g, ' ')}</span>
+                        Act: <span className="text-white capitalize">{req.performerDetails.performerType ? req.performerDetails.performerType.replace(/_/g, ' ') : 'Performer'}</span>
                       </div>
                     )}
 
                     {req.category === 'crew' && req.crewDetails && (
                       <div className="text-zinc-400 font-mono text-[11px]">
-                        Headcount: <span className="text-white tabular-nums">{req.crewDetails.headcount} Members</span>
+                        Headcount: <span className="text-white tabular-nums">{req.crewDetails.headcount || 1} Members</span>
                       </div>
                     )}
                   </div>

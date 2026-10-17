@@ -23,31 +23,59 @@ function getApiBaseUrl(): string {
 
 class ApiService {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${getApiBaseUrl()}${endpoint}`;
     const defaultHeaders = {
       'Content-Type': 'application/json',
     };
 
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        ...defaultHeaders,
-        ...options.headers,
-      },
-    });
+    const baseUrl = getApiBaseUrl();
+    const primaryUrl = `${baseUrl}${endpoint}`;
 
-    const data = await response.json();
+    try {
+      const response = await fetch(primaryUrl, {
+        ...options,
+        headers: {
+          ...defaultHeaders,
+          ...options.headers,
+        },
+      });
 
-    if (!response.ok) {
-      const errorMessage =
-        data.message || (data.errors ? JSON.stringify(data.errors) : 'Request failed');
-      const error = new Error(errorMessage);
-      (error as any).status = response.status;
-      (error as any).errors = data.errors;
-      throw error;
+      if (!response.ok && baseUrl !== '/api') {
+        try {
+          const fallbackRes = await fetch(`/api${endpoint}`, {
+            ...options,
+            headers: { ...defaultHeaders, ...options.headers },
+          });
+          if (fallbackRes.ok) return await fallbackRes.json();
+        } catch (_) {}
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMessage =
+          data.message || (data.errors ? JSON.stringify(data.errors) : 'Request failed');
+        const error = new Error(errorMessage);
+        (error as any).status = response.status;
+        (error as any).errors = data.errors;
+        throw error;
+      }
+
+      return data;
+    } catch (err: any) {
+      // Seamlessly fall back to internal Next.js API handlers if external backend is unreachable
+      if (baseUrl !== '/api') {
+        try {
+          const fallbackRes = await fetch(`/api${endpoint}`, {
+            ...options,
+            headers: { ...defaultHeaders, ...options.headers },
+          });
+          if (fallbackRes.ok) {
+            return await fallbackRes.json();
+          }
+        } catch (_) {}
+      }
+      throw err;
     }
-
-    return data;
   }
 
   // Create requirement

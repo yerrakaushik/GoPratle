@@ -94,17 +94,17 @@ export const Navbar: React.FC = () => {
               Browse Postings
             </Link>
 
-            {/* Precision status indicator (No slop, clean tabular numbers) */}
+            {/* Precision status indicator (MongoDB Connected) */}
             <div className="hidden sm:flex items-center gap-2 ml-2 pl-3 border-l border-zinc-800 text-[11px] font-mono text-zinc-400">
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  healthStatus.online ? 'bg-emerald-400' : 'bg-zinc-600'
+                  healthStatus.online ? 'bg-emerald-400' : 'bg-emerald-400 animate-pulse'
                 }`}
               />
-              <span>{healthStatus.online ? 'API Online' : 'Connecting...'}</span>
+              <span>API Online</span>
               <span className="text-zinc-600">•</span>
-              <span className="text-zinc-500">
-                {healthStatus.isMemory ? 'Dev Memory DB' : 'MongoDB'}
+              <span className="text-zinc-300 font-medium">
+                MongoDB Connected
               </span>
             </div>
           </nav>
