@@ -3,15 +3,12 @@
 :root {
   --background: #09090b;
   --foreground: #f4f4f5;
-  --card: #121215;
-  --card-border: #222226;
-  --surface: #18181b;
-  --surface-hover: #202024;
-  --border: #27272a;
+  --surface: #121215;
+  --surface-hover: #1c1c20;
+  --surface-active: #242429;
+  --border: #222226;
   --border-focus: #52525b;
   --muted: #71717a;
-  --accent: #ffffff;
-  --accent-foreground: #09090b;
 }
 
 @theme inline {
@@ -29,6 +26,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -37,35 +35,76 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  /* Ultra-subtle architectural grid texture */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 p {
   text-wrap: pretty;
 }
 
-/* Tabular figures for data stability */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Tactile button press feedback */
+/* Tactile press feedback */
 .pressable {
-  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), background-color 150ms ease, border-color 150ms ease;
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .pressable:active {
   transform: scale(0.96);
 }
 
-/* Subtle clean scrollbar */
+/* Keyboard badge styling */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background-color: #18181b;
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-step {
+  animation: fadeInSlide 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Focus styles */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #71717a;
+  box-shadow: 0 0 0 1px #71717a;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;

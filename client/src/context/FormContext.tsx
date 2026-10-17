@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import {
   CategoryType,
   RequirementDocument,
@@ -68,6 +68,8 @@ interface FormContextType {
   isSubmitting: boolean;
   submitError: string | null;
   submittedData: RequirementDocument | null;
+  lastSavedAt: string | null;
+  readinessPercentage: number;
   updateEventBasics: (field: string, value: any) => void;
   updatePlannerDetails: (field: string, value: any) => void;
   updatePerformerDetails: (field: string, value: any) => void;
@@ -91,6 +93,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedData, setSubmittedData] = useState<RequirementDocument | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   // Load saved state from localStorage on mount
   useEffect(() => {
@@ -100,6 +103,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const parsed = JSON.parse(saved);
         if (parsed && parsed.eventName !== undefined) {
           setFormData((prev) => ({ ...prev, ...parsed }));
+          setLastSavedAt('Loaded from draft');
         }
       }
     } catch (e) {
@@ -107,13 +111,58 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Sync to localStorage
+  // Sync to localStorage with timestamp
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+      const now = new Date();
+      setLastSavedAt(
+        `${now.getHours().toString().padStart(2, '0')}:${now
+          .getMinutes()
+          .toString()
+          .padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`
+      );
     } catch (e) {
       console.warn('Failed to persist form state', e);
     }
+  }, [formData]);
+
+  // Dynamic Readiness Percentage Calculation
+  const readinessPercentage = useMemo(() => {
+    let score = 0;
+    const totalPoints = 8;
+
+    // Step 1 points
+    if (formData.eventName.trim().length >= 3) score += 1;
+    if (formData.eventType) score += 1;
+    if (formData.startDate) score += 1;
+    if (formData.location.trim().length >= 2) score += 1;
+
+    // Step 2 points
+    if (formData.category === 'planner') {
+      if (formData.plannerDetails.planningScope) score += 1;
+      if (formData.plannerDetails.overallBudget.trim()) score += 1;
+    } else if (formData.category === 'performer') {
+      if (formData.performerDetails.performerType) score += 1;
+      if (formData.performerDetails.genreOrStyle.trim()) score += 1;
+    } else if (formData.category === 'crew') {
+      if (formData.crewDetails.rolesNeeded?.length > 0) score += 1;
+      if (formData.crewDetails.shiftCallTime.trim()) score += 1;
+    }
+
+    // Step 3 points
+    if (formData.category === 'planner') {
+      if (formData.plannerDetails.servicesNeeded?.length > 0) score += 1;
+      if (formData.plannerDetails.estimatedGuestCount > 0) score += 1;
+    } else if (formData.category === 'performer') {
+      if (formData.performerDetails.performanceFeeBudget.trim()) score += 1;
+      if (formData.performerDetails.performanceDuration.trim()) score += 1;
+    } else if (formData.category === 'crew') {
+      if (formData.crewDetails.compensationRate.trim()) score += 1;
+      if (formData.crewDetails.headcount > 0) score += 1;
+    }
+
+    return Math.round((score / totalPoints) * 100);
   }, [formData]);
 
   const updateEventBasics = (field: string, value: any) => {
@@ -268,7 +317,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return Object.keys(newErrors).length === 0;
   };
 
-  const goToNextStep = (): boolean => {
+  const goToNextStep = useCallback((): boolean => {
     const isValid = validateStep(currentStep);
     if (isValid && currentStep < 4) {
       setCurrentStep((prev) => prev + 1);
@@ -276,18 +325,17 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     }
     return false;
-  };
+  }, [currentStep, formData]);
 
-  const goToPreviousStep = () => {
+  const goToPreviousStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  };
+  }, [currentStep]);
 
   const goToStep = (step: number) => {
     if (step >= 1 && step <= 4) {
-      // Validate up to previous step
       if (step > currentStep) {
         const isValid = validateStep(currentStep);
         if (!isValid) return;
@@ -415,8 +463,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setErrors({});
   };
 
-  const submitForm = async (): Promise<RequirementDocument | null> => {
-    // Validate current step
+  const submitForm = useCallback(async (): Promise<RequirementDocument | null> => {
     const isValid = validateStep(currentStep);
     if (!isValid) return null;
 
@@ -424,7 +471,6 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSubmitError(null);
 
     try {
-      // Build clean payload containing only relevant category subdocument
       const payload: Partial<RequirementFormData> = {
         eventName: formData.eventName,
         eventType: formData.eventType,
@@ -462,12 +508,30 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [currentStep, formData]);
 
   const clearSubmitState = () => {
     setSubmittedData(null);
     setSubmitError(null);
   };
+
+  // Keyboard shortcut listener (Cmd/Ctrl + Enter)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if in a textarea where enter makes newline
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (currentStep === 4) {
+          submitForm();
+        } else {
+          goToNextStep();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentStep, goToNextStep, submitForm]);
 
   return (
     <FormContext.Provider
@@ -478,6 +542,8 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isSubmitting,
         submitError,
         submittedData,
+        lastSavedAt,
+        readinessPercentage,
         updateEventBasics,
         updatePlannerDetails,
         updatePerformerDetails,
